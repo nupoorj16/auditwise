@@ -5,7 +5,7 @@ Raw values look like: '998', '$143', '83,802', '₹5070', 'Rs.828', '999999999'
 import pandas as pd
 import re
 
-SENTINEL = 999999999
+SENTINELS = {999999.0, 999999999.0}
 
 def clean_amount(val):
     """Turn a messy amount string into a float, or None if unparseable."""
@@ -22,7 +22,7 @@ def clean_amount(val):
 def add_clean_amount(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df["amount_clean"] = df["amount"].apply(clean_amount)
-    df["was_sentinel"] = df["amount_clean"] == SENTINEL
+    df["was_sentinel"] = df["amount_clean"].isin(SENTINELS)
     df.loc[df["was_sentinel"], "amount_clean"] = None
     p99 = df["amount_clean"].quantile(0.99)
     df["is_outlier"] = df["amount_clean"] > p99
