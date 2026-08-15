@@ -141,12 +141,25 @@ def retrieve(question: str, user_id: str, df: pd.DataFrame) -> dict:
     structured_df = apply_structured_filters(df, user_id, filters)
     aggregate = compute_aggregate(structured_df, filters)
 
+    context_cols = [
+        "transaction_id_clean", "date_clean", "category_clean", "amount_clean",
+        "is_anomaly", "lower_bound", "upper_bound", "category_median", "chunk_text",
+    ]
+
     if filters.get("semantic_terms"):
-        context_rows = semantic_search(filters["semantic_terms"], filters, user_id)
+        semantic_hits = semantic_search(filters["semantic_terms"], filters, user_id)
+        # semantic hits come from Chroma metadata, which doesn't carry the
+        # anomaly bounds - merge those back in from the full dataframe.
+        bounds = df[["transaction_id_clean", "lower_bound", "upper_bound", "category_median"]]
+        context_rows = semantic_hits.merge(
+            bounds, left_on="transaction_id", right_on="transaction_id_clean", how="left"
+        )
+        context_rows = context_rows.rename(columns={"date": "date_clean", "category": "category_clean", "amount": "amount_clean"})
+        context_rows = context_rows[[c for c in context_cols if c in context_rows.columns]]
     elif filters.get("aggregation", "none") != "none":
-        context_rows = structured_df.head(5)[["transaction_id_clean", "date_clean", "category_clean", "amount_clean", "chunk_text"]]
+        context_rows = structured_df.head(5)[context_cols]
     else:
-        context_rows = structured_df.head(15)[["transaction_id_clean", "date_clean", "category_clean", "amount_clean", "chunk_text"]]
+        context_rows = structured_df.head(15)[context_cols]
 
     return {
         "filters": filters,
