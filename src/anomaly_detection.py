@@ -17,7 +17,7 @@ def compute_bounds(group: pd.Series) -> pd.Series:
         "category_median": group.median(),
         "category_q1": q1,
         "category_q3": q3,
-        "lower_bound": q1 - 1.5 * iqr,
+        "lower_bound": max(0.0, q1 - 1.5 * iqr),  # amounts are never negative
         "upper_bound": q3 + 1.5 * iqr,
     })
 

@@ -41,6 +41,7 @@ EXTRACT_FILTERS_TOOL = {
         "parameters": {
             "type": "object",
             "properties": {
+                "transaction_id": {"type": ["string", "null"], "description": "A specific transaction ID mentioned in the question (e.g. 'A_T4325'), or null if none is mentioned. When set, this overrides all other filters - the question is about one specific transaction."},
                 "start_date": {"type": ["string", "null"], "description": "ISO date YYYY-MM-DD, inclusive start of date range, or null if not specified"},
                 "end_date": {"type": ["string", "null"], "description": "ISO date YYYY-MM-DD, inclusive end of date range, or null if not specified"},
                 "category": {"type": ["string", "null"], "enum": CANONICAL_CATEGORIES + [None]},
@@ -49,7 +50,7 @@ EXTRACT_FILTERS_TOOL = {
                 "aggregation_period": {"type": ["string", "null"], "enum": ["monthly", "total", None], "description": "'monthly' for questions like 'average monthly spend', 'total' for a single sum/average/count over the whole range, null if aggregation is 'none'"},
                 "semantic_terms": {"type": ["string", "null"], "description": "Leftover descriptive keywords (e.g. a merchant or description mentioned) for semantic search over transaction notes. Null if the question is purely structured (dates/category/aggregation)."},
             },
-            "required": ["start_date", "end_date", "category", "anomalies_only", "aggregation", "aggregation_period", "semantic_terms"],
+            "required": ["transaction_id", "start_date", "end_date", "category", "anomalies_only", "aggregation", "aggregation_period", "semantic_terms"],
         },
     },
 }
@@ -138,13 +139,25 @@ def retrieve(question: str, user_id: str, df: pd.DataFrame) -> dict:
     reference_today = df["date_clean"].max().strftime("%Y-%m-%d")
     filters = extract_filters(question, reference_today)
 
-    structured_df = apply_structured_filters(df, user_id, filters)
-    aggregate = compute_aggregate(structured_df, filters)
-
     context_cols = [
         "transaction_id_clean", "date_clean", "category_clean", "amount_clean",
         "is_anomaly", "lower_bound", "upper_bound", "category_median", "chunk_text",
     ]
+
+    if filters.get("transaction_id"):
+        # Direct lookup by ID overrides every other filter - still scoped to
+        # this user, so asking about someone else's ID returns nothing.
+        match = df[(df["user_id"] == user_id) & (df["transaction_id_clean"] == filters["transaction_id"])]
+        return {
+            "filters": filters,
+            "reference_today": reference_today,
+            "aggregate": None,
+            "matched_count": len(match),
+            "context_rows": match[context_cols],
+        }
+
+    structured_df = apply_structured_filters(df, user_id, filters)
+    aggregate = compute_aggregate(structured_df, filters)
 
     if filters.get("semantic_terms"):
         semantic_hits = semantic_search(filters["semantic_terms"], filters, user_id)
