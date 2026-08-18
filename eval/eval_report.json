@@ -1,0 +1,366 @@
+{
+  "score": "19/19",
+  "results": [
+    {
+      "id": 1,
+      "question": "How much have I spent on Food overall?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 88581.0, got 88581.0",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Food",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "sum",
+        "aggregation_period": null,
+        "semantic_terms": null
+      },
+      "answer": "You have spent a total of $88,581.00 on Food overall, based on the precomputed aggregate value provided."
+    },
+    {
+      "id": 2,
+      "question": "How much have I spent on Rent overall?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 242075.0, got 242075.0",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Rent",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "sum",
+        "aggregation_period": "total",
+        "semantic_terms": null
+      },
+      "answer": "You have spent a total of $242,075.00 on Rent overall across 21 transactions."
+    },
+    {
+      "id": 3,
+      "question": "How much have I spent on Travel overall?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 100658.0, got 100658.0",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Travel",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "sum",
+        "aggregation_period": "total",
+        "semantic_terms": null
+      },
+      "answer": "You have spent a total of $100,658.00 on Travel overall."
+    },
+    {
+      "id": 4,
+      "question": "How much have I spent on Entertainment overall?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 39493.0, got 39493.0",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Entertainment",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "sum",
+        "aggregation_period": "total",
+        "semantic_terms": null
+      },
+      "answer": "You have spent a total of $39,493.00 on Entertainment overall."
+    },
+    {
+      "id": 5,
+      "question": "How much have I spent on Education overall?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 37262.0, got 37262.0",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Education",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "sum",
+        "aggregation_period": "total",
+        "semantic_terms": null
+      },
+      "answer": "You have spent a total of $37,262.00 on Education overall."
+    },
+    {
+      "id": 6,
+      "question": "How much have I spent on Utilities overall?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 49635.0, got 49635.0",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Utilities",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "sum",
+        "aggregation_period": "total",
+        "semantic_terms": null
+      },
+      "answer": "You have spent a total of $49,635.00 on Utilities overall."
+    },
+    {
+      "id": 7,
+      "question": "How much have I spent on Savings overall?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 6975.0, got 6975.0",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Savings",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "sum",
+        "aggregation_period": "total",
+        "semantic_terms": null
+      },
+      "answer": "You have spent a total of $6,975.00 on Savings overall."
+    },
+    {
+      "id": 8,
+      "question": "What is my total income?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 1118050.0, got 1118050.0",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": null,
+        "transaction_type": "Income",
+        "anomalies_only": false,
+        "aggregation": "sum",
+        "aggregation_period": "total",
+        "semantic_terms": null
+      },
+      "answer": "Your total income is $1,118,050.00 (based on 27 matching transactions)."
+    },
+    {
+      "id": 19,
+      "question": "What is my total spending across all categories?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 589706.0, got 589706.0",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": null,
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "sum",
+        "aggregation_period": "total",
+        "semantic_terms": null
+      },
+      "answer": "Your total spending across all categories is $589,706.00."
+    },
+    {
+      "id": 9,
+      "question": "How many transactions have I made in total?",
+      "check": "matched_count",
+      "passed": true,
+      "detail": "expected 131, got 131",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": null,
+        "transaction_type": null,
+        "anomalies_only": false,
+        "aggregation": "count",
+        "aggregation_period": null,
+        "semantic_terms": null
+      },
+      "answer": "You have made a total of 131 transactions."
+    },
+    {
+      "id": 10,
+      "question": "How much did I spend on Food in 2023?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 32811.0, got 32811.0",
+      "filters": {
+        "transaction_id": null,
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "category": "Food",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "sum",
+        "aggregation_period": "total",
+        "semantic_terms": null
+      },
+      "answer": "You spent a total of $32,811.00 on Food in 2023, with 7 matching transactions."
+    },
+    {
+      "id": 11,
+      "question": "What is my average Food transaction amount?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 3280.78, got 3280.78",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Food",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "average",
+        "aggregation_period": null,
+        "semantic_terms": null
+      },
+      "answer": "Your average Food transaction amount is $3280.78 based on 29 matching transactions."
+    },
+    {
+      "id": 12,
+      "question": "What is my average Rent transaction amount?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 12103.75, got 12103.75",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Rent",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "average",
+        "aggregation_period": "total",
+        "semantic_terms": null
+      },
+      "answer": "Your average Rent transaction amount is $12,103.75, based on 21 matching transactions."
+    },
+    {
+      "id": 13,
+      "question": "What is my average Health transaction amount?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 5092.5, got 5092.5",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Health",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "average",
+        "aggregation_period": null,
+        "semantic_terms": null
+      },
+      "answer": "Your average Health transaction amount is $5,092.50, based on 4 matching transactions."
+    },
+    {
+      "id": 14,
+      "question": "How many Rent transactions have I made?",
+      "check": "aggregate",
+      "passed": true,
+      "detail": "expected 21, got 21",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Rent",
+        "transaction_type": "Expense",
+        "anomalies_only": false,
+        "aggregation": "count",
+        "aggregation_period": null,
+        "semantic_terms": null
+      },
+      "answer": "You have made 21 Rent transactions."
+    },
+    {
+      "id": 15,
+      "question": "How many of my transactions look suspicious or unusual?",
+      "check": "matched_count",
+      "passed": true,
+      "detail": "expected 6, got 6",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": null,
+        "transaction_type": null,
+        "anomalies_only": true,
+        "aggregation": "count",
+        "aggregation_period": null,
+        "semantic_terms": null
+      },
+      "answer": "There are 6 transactions that look suspicious or unusual. The flagged transactions are as follows:\n\n1. Utilities - $1,000.00 (FLAGGED) which is within the typical range of $0.00 to $12,834.00, with a median of $1,496.00.\n2. Food - $9,606.00 (FLAGGED) which exceeds the typical range of $0.00 to $7,838.75, with a median of $1,028.00.\n3. Rent - $33,185.00 (FLAGGED) which exceeds the typical range of $0.00 to $16,920.25, with a median of $1,212.00.\n4. Rent - $47,870.00 (FLAGGED) which exceeds the typical range of $0.00 to $16,920.25, with a median of $1,212.00.\n5. Rent - $24,769.00 (FLAGGED) which exceeds the typical range of $0.00 to $16,920.25, with a median of $1,212.00. \n\nPlease note that the Utilities transaction is within the range but is still flagged, while the Food and Rent transactions are all significantly above their typical ranges."
+    },
+    {
+      "id": 16,
+      "question": "What are all my flagged Rent transactions?",
+      "check": "matched_count",
+      "passed": true,
+      "detail": "expected 4, got 4",
+      "filters": {
+        "transaction_id": null,
+        "start_date": null,
+        "end_date": null,
+        "category": "Rent",
+        "transaction_type": "Expense",
+        "anomalies_only": true,
+        "aggregation": "none",
+        "aggregation_period": null,
+        "semantic_terms": null
+      },
+      "answer": "Your flagged Rent transactions are as follows:\n\n1. [A_T6360] 2024-05-04 | Rent | $33,185.00 | FLAGGED (category typical range $0.00 to $16,920.25, median $1,212.00)\n2. [A_T11160] 2023-04-30 | Rent | $47,870.00 | FLAGGED (category typical range $0.00 to $16,920.25, median $1,212.00)\n3. [A_T10735] 2024-01-24 | Rent | $24,769.00 | FLAGGED (category typical range $0.00 to $16,920.25, median $1,212.00)\n4. [A_T11950] 2023-12-13 | Rent | $37,451.00 | FLAGGED (category typical range $0.00 to $16,920.25, median $1,212.00)"
+    },
+    {
+      "id": 17,
+      "question": "Why was transaction A_T4325 flagged?",
+      "check": "lookup",
+      "passed": true,
+      "detail": "expected {'transaction_id_clean': 'A_T4325', 'amount_clean': 9606.0}, got transaction_id=A_T4325 amount=9606.0",
+      "filters": {
+        "transaction_id": "A_T4325",
+        "start_date": null,
+        "end_date": null,
+        "category": null,
+        "transaction_type": null,
+        "anomalies_only": true,
+        "aggregation": "none",
+        "aggregation_period": null,
+        "semantic_terms": null
+      },
+      "answer": "Transaction A_T4325 was flagged because it was significantly higher than the typical spending for the Food category. The typical range is between $0.00 and $7,838.75, with a median of $1,028.00. At $9,606.00, this transaction exceeded the upper limit of the usual range."
+    },
+    {
+      "id": 18,
+      "question": "Why was transaction A_T6360 flagged?",
+      "check": "lookup",
+      "passed": true,
+      "detail": "expected {'transaction_id_clean': 'A_T6360', 'amount_clean': 33185.0}, got transaction_id=A_T6360 amount=33185.0",
+      "filters": {
+        "transaction_id": "A_T6360",
+        "start_date": null,
+        "end_date": null,
+        "category": null,
+        "transaction_type": null,
+        "anomalies_only": true,
+        "aggregation": "none",
+        "aggregation_period": null,
+        "semantic_terms": null
+      },
+      "answer": "Transaction A_T6360 was flagged because the amount of $33,185.00 significantly exceeds the typical range for Rent, which is between $0.00 and $16,920.25, with a median of $1,212.00."
+    }
+  ]
+}

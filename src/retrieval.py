@@ -45,12 +45,13 @@ EXTRACT_FILTERS_TOOL = {
                 "start_date": {"type": ["string", "null"], "description": "ISO date YYYY-MM-DD, inclusive start of date range, or null if not specified"},
                 "end_date": {"type": ["string", "null"], "description": "ISO date YYYY-MM-DD, inclusive end of date range, or null if not specified"},
                 "category": {"type": ["string", "null"], "enum": CANONICAL_CATEGORIES + [None]},
+                "transaction_type": {"type": ["string", "null"], "enum": ["Income", "Expense", None], "description": "Set to 'Income' for questions about income/earnings (e.g. 'how much did I earn', 'total income') and 'Expense' for questions specifically about spending, regardless of category. Null if the question doesn't distinguish (e.g. it already names a specific category, or asks about all transactions)."},
                 "anomalies_only": {"type": "boolean", "description": "true if the question is asking about suspicious/unusual/flagged transactions"},
                 "aggregation": {"type": "string", "enum": ["sum", "average", "count", "none"]},
                 "aggregation_period": {"type": ["string", "null"], "enum": ["monthly", "total", None], "description": "'monthly' for questions like 'average monthly spend', 'total' for a single sum/average/count over the whole range, null if aggregation is 'none'"},
                 "semantic_terms": {"type": ["string", "null"], "description": "Leftover descriptive keywords (e.g. a merchant or description mentioned) for semantic search over transaction notes. Null if the question is purely structured (dates/category/aggregation)."},
             },
-            "required": ["transaction_id", "start_date", "end_date", "category", "anomalies_only", "aggregation", "aggregation_period", "semantic_terms"],
+            "required": ["transaction_id", "start_date", "end_date", "category", "transaction_type", "anomalies_only", "aggregation", "aggregation_period", "semantic_terms"],
         },
     },
 }
@@ -83,6 +84,8 @@ def apply_structured_filters(df: pd.DataFrame, user_id: str, filters: dict) -> p
         mask &= df["date_clean"] <= pd.Timestamp(filters["end_date"])
     if filters.get("category"):
         mask &= df["category_clean"] == filters["category"]
+    if filters.get("transaction_type"):
+        mask &= df["transaction_type"] == filters["transaction_type"]
     if filters.get("anomalies_only"):
         mask &= df["is_anomaly"] == True  # noqa: E712
     return df[mask]
@@ -113,6 +116,8 @@ def semantic_search(query: str, filters: dict, user_id: str, n_results=10) -> pd
     where_clauses = [{"user_id": user_id}]
     if filters.get("category"):
         where_clauses.append({"category": filters["category"]})
+    if filters.get("transaction_type"):
+        where_clauses.append({"transaction_type": filters["transaction_type"]})
     if filters.get("anomalies_only"):
         where_clauses.append({"is_anomaly": True})
     where = {"$and": where_clauses} if len(where_clauses) > 1 else where_clauses[0]
