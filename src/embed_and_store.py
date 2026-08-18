@@ -48,6 +48,15 @@ def get_collection():
 
 
 def load_into_chroma(df: pd.DataFrame):
+    """Rebuilds the collection from scratch so it never drifts out of sync
+    with the source CSV if cleaning/anomaly logic changes upstream."""
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        raise RuntimeError("OPENAI_API_KEY is not set. Copy .env.example to .env and fill in your key.")
+    client = chromadb.PersistentClient(path=CHROMA_DIR)
+    if COLLECTION_NAME in [c.name for c in client.list_collections()]:
+        client.delete_collection(name=COLLECTION_NAME)
+
     collection = get_collection()
 
     for start in range(0, len(df), BATCH_SIZE):
