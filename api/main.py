@@ -3,6 +3,7 @@ FastAPI backend exposing the cleaning/anomaly/RAG pipeline in src/ as HTTP
 endpoints for the Next.js frontend. Data is loaded once at startup and kept
 in memory - fine at this scale (30K rows), avoids re-reading the CSV per request.
 """
+import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -13,9 +14,13 @@ from src.generation import answer_question
 
 app = FastAPI(title="Finance RAG API")
 
+# CORS_ORIGINS is a comma-separated list, e.g. "https://my-app.vercel.app,http://localhost:3000"
+_extra_origins = os.environ.get("CORS_ORIGINS", "")
+allow_origins = ["http://localhost:3000"] + [o.strip() for o in _extra_origins.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=allow_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

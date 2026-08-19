@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: fin-rag-api
+    runtime: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      python3 -m src.combine_datasets
+      python3 -m src.clean_amount
+      python3 -m src.clean_dates
+      python3 -m src.clean_categories
+      python3 -m src.clean_payment_mode
+      python3 -m src.dedupe
+      python3 -m src.anomaly_detection
+      python3 -m src.chunking
+      python3 -m src.embed_and_store
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
