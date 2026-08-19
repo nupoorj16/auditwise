@@ -29,7 +29,17 @@ export function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [slowLoad, setSlowLoad] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!loading) {
+      setSlowLoad(false);
+      return;
+    }
+    const timer = setTimeout(() => setSlowLoad(true), 5000);
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   useEffect(() => {
     setMessages([]);
@@ -81,6 +91,9 @@ export function Chat() {
                   </Button>
                 ))}
               </div>
+              <p className="text-xs text-muted-foreground max-w-sm">
+                First question may take up to a minute if the server has been idle.
+              </p>
             </div>
           )}
 
@@ -93,7 +106,9 @@ export function Chat() {
               <Avatar className="h-7 w-7">
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs">AI</AvatarFallback>
               </Avatar>
-              <span className="animate-pulse">Thinking…</span>
+              <span className="animate-pulse">
+                {slowLoad ? "Still working, the server may be waking up…" : "Thinking…"}
+              </span>
             </div>
           )}
           <div ref={bottomRef} />
