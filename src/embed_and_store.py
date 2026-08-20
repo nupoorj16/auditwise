@@ -8,6 +8,17 @@ structured filtering (Chroma `where` clauses) with semantic search in
 one call - that's the "hybrid" part of hybrid retrieval.
 """
 import os
+
+# Must run before importing chromadb: many hosts (Render included) ship a
+# system sqlite3 older than what Chroma requires, which crashes at import
+# time. Swap in the modern pysqlite3-binary build first, when available.
+try:
+    __import__("pysqlite3")
+    import sys
+    sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+except ImportError:
+    pass
+
 import pandas as pd
 import chromadb
 from chromadb.utils import embedding_functions
