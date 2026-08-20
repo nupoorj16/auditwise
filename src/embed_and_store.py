@@ -8,20 +8,7 @@ structured filtering (Chroma `where` clauses) with semantic search in
 one call - that's the "hybrid" part of hybrid retrieval.
 """
 import os
-
-# Must run before importing chromadb: many hosts (Render included) ship a
-# system sqlite3 older than what Chroma requires, which crashes at import
-# time. Swap in the modern pysqlite3-binary build first, when available.
-try:
-    __import__("pysqlite3")
-    import sys
-    sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
-except ImportError:
-    pass
-
 import pandas as pd
-import chromadb
-from chromadb.utils import embedding_functions
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -30,6 +17,27 @@ CHROMA_DIR = "chroma_db"
 COLLECTION_NAME = "transactions"
 EMBEDDING_MODEL = "text-embedding-3-small"
 BATCH_SIZE = 500
+
+
+def _chromadb_client():
+    """Lazily import and construct the Chroma client.
+
+    chromadb pulls in a heavy dependency chain (onnxruntime among them) that
+    we don't need - we only ever use OpenAI's hosted embedding API. Importing
+    it eagerly at module load time meant every API request path (including
+    ones that never touch the vector DB, like the dashboard endpoints) paid
+    that memory cost at server startup. Deferring the import to first actual
+    use keeps startup lean on memory-constrained hosts.
+    """
+    try:
+        __import__("pysqlite3")
+        import sys
+        sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+    except ImportError:
+        pass
+
+    import chromadb
+    return chromadb.PersistentClient(path=CHROMA_DIR)
 
 
 def build_metadata(row) -> dict:
@@ -47,6 +55,8 @@ def build_metadata(row) -> dict:
 
 
 def get_collection():
+    from chromadb.utils import embedding_functions
+
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY is not set. Copy .env.example to .env and fill in your key.")
@@ -54,7 +64,7 @@ def get_collection():
     embedding_fn = embedding_functions.OpenAIEmbeddingFunction(
         api_key=api_key, model_name=EMBEDDING_MODEL
     )
-    client = chromadb.PersistentClient(path=CHROMA_DIR)
+    client = _chromadb_client()
     return client.get_or_create_collection(name=COLLECTION_NAME, embedding_function=embedding_fn)
 
 
@@ -64,7 +74,7 @@ def load_into_chroma(df: pd.DataFrame):
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY is not set. Copy .env.example to .env and fill in your key.")
-    client = chromadb.PersistentClient(path=CHROMA_DIR)
+    client = _chromadb_client()
     if COLLECTION_NAME in [c.name for c in client.list_collections()]:
         client.delete_collection(name=COLLECTION_NAME)
 
