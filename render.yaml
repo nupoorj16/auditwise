@@ -14,7 +14,12 @@ services:
       python3 -m src.anomaly_detection
       python3 -m src.chunking
       python3 -m src.embed_and_store
-    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    # --loop asyncio / --http h11: force the pure-Python event loop and HTTP
+    # parser instead of uvloop/httptools. uvloop's C extension segfaults on
+    # some sandboxed container runtimes (this is what was crashing the
+    # service with exit 139 - it happened at server start, never during the
+    # plain-Python build scripts, which never touch uvloop).
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT --loop asyncio --http h11
     envVars:
       - key: OPENAI_API_KEY
         sync: false
