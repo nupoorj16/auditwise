@@ -1,34 +1,20 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { api, UserListItem } from "./api";
+import { createContext, useContext, useState, ReactNode } from "react";
+import { PERSONAS } from "./identity";
 
 type UserContextValue = {
-  users: UserListItem[];
-  selectedUserId: string | null;
+  selectedUserId: string;
   setSelectedUserId: (id: string) => void;
-  loading: boolean;
 };
 
 const UserContext = createContext<UserContextValue | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [users, setUsers] = useState<UserListItem[]>([]);
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    api
-      .listUsers()
-      .then((list) => {
-        setUsers(list);
-        if (list.length > 0) setSelectedUserId(list[0].user_id);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const [selectedUserId, setSelectedUserId] = useState<string>(PERSONAS[0].userId);
 
   return (
-    <UserContext.Provider value={{ users, selectedUserId, setSelectedUserId, loading }}>
+    <UserContext.Provider value={{ selectedUserId, setSelectedUserId }}>
       {children}
     </UserContext.Provider>
   );

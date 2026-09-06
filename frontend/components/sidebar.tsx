@@ -3,25 +3,19 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@/lib/user-context";
 import { api, UserSummary } from "@/lib/api";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { getPersona } from "@/lib/identity";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { AccountSwitcher } from "@/components/account-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { BookCheck, Wallet, TrendingUp, TriangleAlert, Info } from "lucide-react";
+import { BookCheck, Wallet, TrendingUp, TriangleAlert } from "lucide-react";
 
 function formatCurrency(n: number) {
   return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 }
 
 export function Sidebar() {
-  const { users, selectedUserId, setSelectedUserId, loading } = useUser();
+  const { selectedUserId } = useUser();
   const [summary, setSummary] = useState<UserSummary | null>(null);
 
   useEffect(() => {
@@ -42,40 +36,11 @@ export function Sidebar() {
         </div>
       </div>
 
-      <div className="space-y-2">
-        <div className="flex items-center gap-1.5">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-            Demo profile
-          </p>
-          <Tooltip>
-            <TooltipTrigger
-              className="text-muted-foreground hover:text-foreground"
-              aria-label="What is a demo profile?"
-            >
-              <Info className="h-3.5 w-3.5" />
-            </TooltipTrigger>
-            <TooltipContent className="max-w-64">
-              There&apos;s no real login here. Each option is a synthetic sample
-              profile with its own transaction history, pick any one to explore.
-            </TooltipContent>
-          </Tooltip>
-        </div>
-        {loading ? (
-          <Skeleton className="h-9 w-full" />
-        ) : (
-          <Select value={selectedUserId ?? undefined} onValueChange={setSelectedUserId}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a profile" />
-            </SelectTrigger>
-            <SelectContent>
-              {users.map((u) => (
-                <SelectItem key={u.user_id} value={u.user_id}>
-                  {u.user_id} &middot; {u.transaction_count} txns
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
+      <div className="flex flex-col gap-2.5">
+        <AccountSwitcher />
+        <p className="text-xs text-muted-foreground leading-relaxed px-0.5">
+          {getPersona(selectedUserId).backstory}
+        </p>
       </div>
 
       <div className="space-y-2.5">

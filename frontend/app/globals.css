@@ -83,6 +83,8 @@
   --sidebar-border: #e1e0d9;
   --sidebar-ring: #2a78d6;
   --success: #0ca30c;
+  --avatar-teal: #1a8c8c;
+  --avatar-rose: #c2467a;
 }
 
 .dark {
@@ -118,6 +120,8 @@
   --sidebar-border: #2c2c2a;
   --sidebar-ring: #3987e5;
   --success: #0ca30c;
+  --avatar-teal: #2fa6a6;
+  --avatar-rose: #d9679c;
 }
 
 @layer base {
