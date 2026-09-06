@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { BookCheck, Wallet, TriangleAlert, CalendarClock, X, Send } from "lucide-react";
 
 type Message = {
   role: "user" | "assistant";
@@ -14,10 +16,12 @@ type Message = {
   contextRows?: ChatContextRow[];
 };
 
+const WELCOME_DISMISSED_KEY = "auditwise_welcome_dismissed";
+
 const SUGGESTIONS = [
-  "How much have I spent on food overall?",
-  "What transactions look suspicious or unusual?",
-  "What's my average monthly spend on rent?",
+  { icon: Wallet, text: "How much have I spent on food overall?" },
+  { icon: TriangleAlert, text: "What transactions look suspicious or unusual?" },
+  { icon: CalendarClock, text: "What's my average monthly spend on rent?" },
 ];
 
 function formatCurrency(n: number) {
@@ -30,7 +34,25 @@ export function Chat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [slowLoad, setSlowLoad] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      setShowWelcome(localStorage.getItem(WELCOME_DISMISSED_KEY) !== "1");
+    } catch {
+      setShowWelcome(true);
+    }
+  }, []);
+
+  function dismissWelcome() {
+    setShowWelcome(false);
+    try {
+      localStorage.setItem(WELCOME_DISMISSED_KEY, "1");
+    } catch {
+      // ignore - just a per-viewer convenience
+    }
+  }
 
   useEffect(() => {
     if (!loading) {
@@ -77,18 +99,47 @@ export function Chat() {
 
   return (
     <div className="flex flex-col flex-1 max-w-3xl mx-auto w-full h-full">
+      {showWelcome && (
+        <div className="px-6 pt-4">
+          <Alert className="relative pr-10">
+            <BookCheck className="h-4 w-4" />
+            <AlertDescription>
+              <strong className="text-foreground font-medium">Welcome to AuditWise.</strong>{" "}
+              This is a demo running on synthetic transaction data, not a real bank connection.
+              Pick a profile in the sidebar, then ask about its spending or explore flagged anomalies below.
+            </AlertDescription>
+            <button
+              onClick={dismissWelcome}
+              aria-label="Dismiss"
+              className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </Alert>
+        </div>
+      )}
+
       <ScrollArea className="flex-1 px-6">
         <div className="flex flex-col gap-4 py-6">
           {messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-              <p className="text-muted-foreground text-sm">
-                Ask about this user&apos;s spending, or try:
-              </p>
+            <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+                <Wallet className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="font-medium">Ask anything about this profile&apos;s finances</p>
+                <p className="text-muted-foreground text-sm mt-1">Try one of these to get started:</p>
+              </div>
               <div className="flex flex-col gap-2 w-full max-w-sm">
-                {SUGGESTIONS.map((s) => (
-                  <Button key={s} variant="outline" size="sm" onClick={() => send(s)}>
-                    {s}
-                  </Button>
+                {SUGGESTIONS.map(({ icon: Icon, text }) => (
+                  <button
+                    key={text}
+                    onClick={() => send(text)}
+                    className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-left text-sm shadow-sm transition-colors hover:border-primary/40 hover:bg-accent"
+                  >
+                    <Icon className="h-4 w-4 shrink-0 text-primary" />
+                    <span>{text}</span>
+                  </button>
                 ))}
               </div>
               <p className="text-xs text-muted-foreground max-w-sm">
@@ -122,8 +173,8 @@ export function Chat() {
           placeholder="Ask about your spending…"
           disabled={!selectedUserId || loading}
         />
-        <Button type="submit" disabled={!selectedUserId || loading || !input.trim()}>
-          Send
+        <Button type="submit" disabled={!selectedUserId || loading || !input.trim()} className="gap-1.5">
+          <Send className="h-3.5 w-3.5" /> Send
         </Button>
       </form>
     </div>

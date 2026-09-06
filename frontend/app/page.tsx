@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/sidebar";
 import { Chat } from "@/components/chat";
 import { Dashboard } from "@/components/dashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MessageCircle, LayoutDashboard } from "lucide-react";
 
 export default function Home() {
   return (
@@ -13,8 +14,12 @@ export default function Home() {
         <Tabs defaultValue="chat" className="flex flex-col flex-1 min-h-0">
           <div className="border-b border-border px-6 pt-4">
             <TabsList>
-              <TabsTrigger value="chat">Chat</TabsTrigger>
-              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+              <TabsTrigger value="chat" className="gap-1.5">
+                <MessageCircle className="h-4 w-4" /> Chat
+              </TabsTrigger>
+              <TabsTrigger value="dashboard" className="gap-1.5">
+                <LayoutDashboard className="h-4 w-4" /> Dashboard
+              </TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value="chat" className="flex flex-col flex-1 min-h-0 mt-0">

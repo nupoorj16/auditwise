@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ChartColumn, TriangleAlert } from "lucide-react";
 
 function formatCurrency(n: number) {
   return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
@@ -56,7 +57,9 @@ export function Dashboard() {
     <div className="flex flex-col gap-6 p-6 max-w-5xl mx-auto w-full">
       <Card>
         <CardHeader>
-          <CardTitle>Spend by category</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <ChartColumn className="h-4 w-4 text-muted-foreground" /> Spend by category
+          </CardTitle>
         </CardHeader>
         <CardContent>
           {!categories ? (
@@ -90,7 +93,9 @@ export function Dashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Flagged transactions</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <TriangleAlert className="h-4 w-4 text-destructive" /> Flagged transactions
+          </CardTitle>
         </CardHeader>
         <CardContent>
           {!anomalies ? (
