@@ -15,8 +15,8 @@ export type Persona = {
 export const PERSONAS: Persona[] = [
   {
     userId: "A_U036",
-    name: "Emily Carter",
-    initials: "EC",
+    name: "Ananya Rao",
+    initials: "AR",
     colorVar: "--chart-1",
     tagline: "The balanced professional",
     backstory:
@@ -24,8 +24,8 @@ export const PERSONAS: Persona[] = [
   },
   {
     userId: "A_U117",
-    name: "Mateo Alvarez",
-    initials: "MA",
+    name: "Arjun Mehta",
+    initials: "AM",
     colorVar: "--avatar-teal",
     tagline: "The freelancer",
     backstory:
