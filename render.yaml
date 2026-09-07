@@ -1,25 +1,10 @@
 services:
   - type: web
     name: fin-rag-api
-    runtime: python
+    runtime: docker
     plan: free
-    buildCommand: |
-      pip install -r requirements.txt
-      python3 -m src.combine_datasets
-      python3 -m src.clean_amount
-      python3 -m src.clean_dates
-      python3 -m src.clean_categories
-      python3 -m src.clean_payment_mode
-      python3 -m src.dedupe
-      python3 -m src.anomaly_detection
-      python3 -m src.chunking
-      python3 -m src.embed_and_store
-    # TEMPORARY: api/diagnose.py prints a marker after each import/startup
-    # step. A segfault (exit 139) bypasses Python's exception handling, so
-    # we can't catch it directly - but the last STEP N printed in the logs
-    # before the crash pinpoints exactly which step is actually failing.
-    # Revert to the plain uvicorn command once we know the cause.
-    startCommand: python3 -m api.diagnose
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
       - key: OPENAI_API_KEY
         sync: false
