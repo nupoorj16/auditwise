@@ -52,35 +52,21 @@ them from the account switcher in the sidebar, no login required.
 
 ## Quick start
 
-**Backend:**
-
 ```bash
-pip install -r requirements.txt
 cp .env.example .env   # add your OPENAI_API_KEY
 
-python3 -m src.combine_datasets
-python3 -m src.clean_amount
-python3 -m src.clean_dates
-python3 -m src.clean_categories
-python3 -m src.clean_payment_mode
-python3 -m src.dedupe
-python3 -m src.anomaly_detection
-python3 -m src.chunking
-python3 -m src.embed_and_store   # calls the OpenAI embeddings API
-
-python3 -m uvicorn api.main:app --port 8000
-```
-
-**Frontend:**
-
-```bash
-cd frontend
-npm install
-cp .env.local.example .env.local
-npm run dev
+make setup      # installs deps, cleans the data, builds the vector DB (~2 min, calls the OpenAI embeddings API)
+make backend    # terminal 1: starts the API on :8000
+make frontend   # terminal 2: installs frontend deps and starts the UI on :3000
 ```
 
 Open `http://localhost:3000`. That's it.
+
+Prefer to see each step individually instead of one `make setup` call? Run the
+scripts one at a time, in this order: `combine_datasets`, `clean_amount`,
+`clean_dates`, `clean_categories`, `clean_payment_mode`, `dedupe`,
+`anomaly_detection`, `chunking`, `embed_and_store` (each via
+`python3 -m src.<name>`), then `python3 -m uvicorn api.main:app --port 8000`.
 
 ## How it works
 
